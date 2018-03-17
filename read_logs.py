@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+__author__ = 'Ilkin Zeynalov   contacs :ilkin.zeynalovich@gmail.com'
+
+'''This project create for read cashin logs and see pictures.
+our company terminal write logs day ahead for that I write this code one day ahead'''
+
+
+
 import os
 import time
 from tqdm import tqdm
@@ -31,11 +38,11 @@ else:
 
 
 def copy ():
-    '''With threads copy currently file. if code give any error day + 1 we can as see'''
+    '''With threads copy currently file. if code give any error day ahead we can as see'''
     try:
         copy = copyfile('//cash' + con + '/CashIn/log/CashInTerminalWpf_debug_{}-{}-{}_00000.txt'.format(gun, ay, il),
                         'C:/logs/terminal.txt')
-        print(threading.current_thread().getName(), 'is Exiting')  #For notification exitinf copy
+        print(threading.current_thread().getName(), 'is Exiting')  #For notification exiting copy
 
 
     except FileNotFoundError:
@@ -43,7 +50,7 @@ def copy ():
 
         copy = copyfile('//cash' + con + '/CashIn/log/CashInTerminalWpf_debug.txt',
                         'C:/logs/terminal.txt')
-        print(threading.current_thread().getName(), 'is Exiting') #For notification exitinf copy
+        print(threading.current_thread().getName(), 'is Exiting') #For notification exiting copy
 
 def bar():
     for i in tqdm(range(100)):   # progress bar
@@ -143,43 +150,38 @@ def emeliyyat():
 
                 print(h)
                 for w in lines[counter:]:
-                    if transID in w:                                #find tranjaction id
-                        print(w[:14],w[96:127])
-                    if Input_Text in w:                             # find all stacked pay
-                        cedvel.append(w[6:14])                      #add all stacked pay
-                        print(w[:14],w[85:].replace('\n', ''))
-                    if cek in w:                                    #print chek
-                        print(w[85:].replace('\n', ''))
-                    if sonmek in w :                                # find shuthdown error code
-                        print('Texniki nasazlıq - Terminal Sönüb')
-                        exit()
-                    if ilishme in w:                                # find when pay is jammed
-                        print(w[:14].replace('\n', ''),'- Caşında  ilişmə olub!!!')
-                    if pasport in w:                                # end person session when created new pasport number
-                        break
+                    if transID in w:                                    #find tranjaction id
+                        print(w[:14],w[96:127])                         #show datatime and tansaction id
+                    if Input_Text in w:                                 # find all stacked pay
+                        cedvel.append(w[6:14])                          #apend list all stacked pay
+                        print(w[:14],w[85:].replace('\n', ''))          #show datatime and delete backspace
+                    if cek in w:                                        #print chek
+                        print(w[85:].replace('\n', ''))                 #show datatime and delete backspace
+                    if sonmek in w :                                    # find shuthdown error code
+                        print('Texniki nasazlıq - Terminal Sönüb')      #show error type
+                        exit()                                          #if terminal is shutdown exit code
+                    if ilishme in w:                                    #find when pay is jammed
+                        print(w[:14].replace('\n', ''),'- Caşında  ilişmə olub!!!') #show datatime and delete backspace
+                    if pasport in w:                                    # end person session when created new pasport number
+                        break                                           # find shuthdown error code
 
 
 
-            counter=counter+1
+            counter=counter+1                   # plus 1 to cycle 
     for a in cedvel:                
 
-        saat = a[:2]
-        deq = a[3:5]
-        san = a[6:8]
+        saat = a[:2]                            #stack hour
+        deq = a[3:5]                            #stack minute
+        san = a[6:8]                            #stacl second
 
 
-        #print(san)
+        '''Run copy pictures with progres bar'''
         tre4 = threading.Thread(target=pic(con,il,ay,gun,saat,deq,san), name="progress")
         tre5 = threading.Thread(target=bar_pic(), name='bar')
         tre4.start()
         tre5.start()
 
 def bar_pic():
-    # print(threading.current_thread().getName(), 'is Starting')
     for i in tqdm(range(100)):
         time.sleep(0.01)
     time.sleep(0.01)
-    # print(threading.current_thread().getName(), 'is Exiting')
-
-
-
